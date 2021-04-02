@@ -201,7 +201,7 @@ class Colin:
               + '('
               + '\033[0;31m'
               + str(self.r)
-              + ', \033[0;34m'
+              + ', \033[0;32m'
               + str(self.g)
               + ', \033[0;34m'
               + str(self.b)
