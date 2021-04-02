@@ -13,77 +13,151 @@
 #
 #
 
+import enum
 from sys import argv, exit
 
-color = '\033[48;2;'
-color_data = color
-reset = '\033[0m'
-table_item = '░░'
 
-def SetColor(r: int, g: int, b: int) -> str:
-    return color + str(r) + ';' + str(g) + ';' + str(b) + 'm'
+class InfoType(enum.Enum):
+    Name = 0
+    Hmm = 1
+    Rgb = 2
+    Hex = 3
+    Cmyk = 4
+    Hsl = 5
+    Hsv = 6
 
-light_gray = SetColor(171, 171, 171)
-white      = SetColor(255, 255, 255)
 
-def TABLE_LIGHT_GRAY():
-    print(light_gray, table_item, white, table_item, reset, sep='', end='')
+infos = (
+    "name: ",
+    "-----",
+    "\033[0;31mr\033[0;32mg\033[0;34mb\033[0m  : ",
+    "hex  : ",
+    "cmyk : ",
+    "hsl  : ",
+    "hsv  : "
+)
 
-def TABLE_WHITE():
-    print(white, table_item, light_gray, table_item, reset, sep='', end='')
+class Colin:
+    color = '\033[48;2;'
+    color_data = color
+    reset = '\033[0m'
+    table_item = '░░'
+    line = 0
 
-def TABLE_COLOR():
-    print(color_data, table_item, reset, sep='', end='')
+    def __init__(self):
+        self.light_gray = self.SetColor(171, 171, 171)
+        self.white = self.SetColor(255, 255, 255)
 
-def NEWLINE():
-    print()
+    def name_function(self):
+        pass
 
-def Init(r: int, g: int, b: int) -> str:
-    return SetColor(r, g, b)
+    def hmm_function(self):
+        pass
 
-def PrintColorBox(split: bool):
-    if split:
-        TABLE_LIGHT_GRAY()
-    else:
-        TABLE_WHITE()
+    def rgb_function(self):
+        pass
 
-    for i in range(6):
-        TABLE_COLOR()
+    def hex_function(self):
+        pass
 
-    if not split:
-        TABLE_LIGHT_GRAY()
-    else:
-        TABLE_WHITE()
+    def cmyk_function(self):
+        pass
 
-    NEWLINE()
+    def hsl_function(self):
+        pass
 
-def PrintBox():
-    i = 0
-    split = False
+    def hsv_function(self):
+        pass
 
-    for i in range(5):
-        TABLE_LIGHT_GRAY()
+    def switch(self, arg: InfoType):
+        {
+            InfoType.Name: self.name_function(),
+            InfoType.Hmm: self.hmm_function(),
+            InfoType.Rgb: self.rgb_function(),
+            InfoType.Hex: self.hex_function(),
+            InfoType.Cmyk: self.cmyk_function(),
+            InfoType.Hsl: self.hsl_function(),
+            InfoType.Hsv: self.hsv_function()
+        }[arg]
 
-    NEWLINE()
+    def SetColor(self, r: int, g: int, b: int) -> str:
+        return self.color + str(r) + ';' + str(g) + ';' + str(b) + 'm'
 
-    for i in range(5):
-        TABLE_WHITE()
+    def Newline(self):
+        if self.line < len(infos):
+            print(' ', infos[self.line])
 
-    NEWLINE()
+            self.switch(InfoType(self.line))
+        else:
+            print(end='\n')
 
-    for i in range(5):
-        PrintColorBox(split)
-        split = not split
+        self.line += 1
 
-    for i in range(5):
-        TABLE_LIGHT_GRAY()
+    def TABLE_LIGHT_GRAY(self):
+        print(self.light_gray, self.table_item, self.white, self.table_item, self.reset, sep='', end='')
 
-    NEWLINE()
 
-    for i in range(5):
-        TABLE_WHITE()
+    def TABLE_WHITE(self):
+        print(self.white, self.table_item, self.light_gray, self.table_item, self.reset, sep='', end='')
 
-    NEWLINE()
+
+    def TABLE_COLOR(self):
+        print(self.color_data, self.table_item, self.reset, sep='', end='')
+
+
+    def NEWLINE(self):
+        print()
+
+
+    def Init(self, r: int, g: int, b: int):
+        self.color_data = self.SetColor(r, g, b)
+
+
+    def PrintColorBox(self, split: bool):
+        if split:
+            self.TABLE_LIGHT_GRAY()
+        else:
+            self.TABLE_WHITE()
+
+        for i in range(6):
+            self.TABLE_COLOR()
+
+        if not self.split:
+            self.TABLE_LIGHT_GRAY()
+        else:
+            self.TABLE_WHITE()
+
+        self.Newline()
+
+
+    def PrintBox(self):
+        i = 0
+        self.split = False
+
+        for i in range(5):
+            self.TABLE_LIGHT_GRAY()
+
+        self.Newline()
+
+        for i in range(5):
+            self.TABLE_WHITE()
+
+        self.Newline()
+
+        for i in range(5):
+            self.PrintColorBox(self.split)
+            self.split = not self.split
+
+        for i in range(5):
+            self.TABLE_LIGHT_GRAY()
+
+        self.Newline()
+
+        for i in range(5):
+            self.TABLE_WHITE()
+
+        self.Newline()
+
 
 if len(argv) < 4:
     print('Fegeya Colin : CLI color info tool',
@@ -94,6 +168,7 @@ if len(argv) < 4:
           sep='\n')
 
     exit(1)
+
 
 def insert(data: str) -> int:
     if data.isnumeric():
@@ -106,5 +181,6 @@ r = insert(argv[1])
 g = insert(argv[2])
 b = insert(argv[3])
 
-color_data = Init(r, g, b)
-PrintBox()
+init = Colin()
+init.Init(r, g, b)
+init.PrintBox()
