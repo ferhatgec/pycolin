@@ -60,7 +60,6 @@ class Colin:
         self.light_gray = self.SetColor(171, 171, 171)
         self.white = self.SetColor(255, 255, 255)
 
-        
         # Rainbow colors
         self.red        = self.SetFgColor(255, 0  , 0)
         self.orange     = self.SetFgColor(255, 165, 0)
@@ -83,7 +82,19 @@ class Colin:
         pass
 
     def rgb_function(self):
-        pass
+        print(self.pink
+              + 'rgb'
+              + self.reset
+              + '('
+              + '\033[0;31m'
+              + str(self.r)
+              + ', \033[0;34m'
+              + str(self.g)
+              + ', \033[0;34m'
+              + str(self.b)
+              + self.reset
+              + ')',
+              end='')
 
     def hex_function(self):
         pass
@@ -108,21 +119,21 @@ class Colin:
 
     def switch(self, arg: InfoType):
         {
-            InfoType.Name: self.name_function(),
+            InfoType.Name: self.name_function,
 
-            InfoType.Hmm: self.hmm_function(),
+            InfoType.Hmm: self.hmm_function,
 
-            InfoType.Rgb: self.rgb_function(),
-            InfoType.Hex: self.hex_function(),
-            InfoType.Cmyk: self.cmyk_function(),
-            InfoType.Hsl: self.hsl_function(),
-            InfoType.Hsv: self.hsv_function(),
+            InfoType.Rgb: self.rgb_function,
+            InfoType.Hex: self.hex_function,
+            InfoType.Cmyk: self.cmyk_function,
+            InfoType.Hsl: self.hsl_function,
+            InfoType.Hsv: self.hsv_function,
 
-            InfoType.Hmm2: self.hmm2_function(),
+            InfoType.Hmm2: self.hmm2_function,
 
-            InfoType.Ascii: self.ascii_function(),
-            InfoType.Esc: self.esc_function()
-        }[arg]
+            InfoType.Ascii: self.ascii_function,
+            InfoType.Esc: self.esc_function
+        }[arg]()
 
     def SetColor(self, r: int, g: int, b: int) -> str:
         return self.color + str(r) + ';' + str(g) + ';' + str(b) + 'm'
@@ -132,11 +143,11 @@ class Colin:
 
     def Newline(self):
         if self.line < len(self.infos):
-            print(' ', self.infos[self.line])
+            print('  ', self.infos[self.line], end='')
 
             self.switch(InfoType(self.line))
-        else:
-            print(end='\n')
+
+        print(end='\n')
 
         self.line += 1
 
@@ -179,7 +190,7 @@ class Colin:
         else:
             self.TABLE_WHITE()
 
-        for i in range(6):
+        for i in range(8):
             self.TABLE_COLOR()
 
         if not self.split:
@@ -194,26 +205,26 @@ class Colin:
         i = 0
         self.split = False
 
-        for i in range(5):
+        for i in range(6):
             self.TABLE_LIGHT_GRAY()
 
         self.Newline()
 
-        for i in range(5):
+        for i in range(6):
             self.TABLE_WHITE()
 
         self.Newline()
 
-        for i in range(5):
+        for i in range(6):
             self.PrintColorBox(self.split)
             self.split = not self.split
 
-        for i in range(5):
+        for i in range(6):
             self.TABLE_LIGHT_GRAY()
 
         self.Newline()
 
-        for i in range(5):
+        for i in range(6):
             self.TABLE_WHITE()
 
         self.Newline()
