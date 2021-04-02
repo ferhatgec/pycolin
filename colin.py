@@ -53,6 +53,10 @@ class Colin:
     ]
 
     def __init__(self):
+        self.r = 0
+        self.g = 0
+        self.b = 0
+
         self.light_gray = self.SetColor(171, 171, 171)
         self.white = self.SetColor(255, 255, 255)
 
@@ -65,6 +69,12 @@ class Colin:
         self.blue       = self.SetFgColor(0  , 0, 255)
         self.purple     = self.SetFgColor(75 , 0, 130)
         self.pink       = self.SetFgColor(238,130,238)
+
+    def ToHex(self, r: int, g: int, b: int) -> str:
+        if (r or g or b) < 0 and (r or g or b) > 255:
+            return '#null'
+
+        return '#%02x%02x%02x' % (r, g, b)
 
     def name_function(self):
         pass
@@ -147,8 +157,15 @@ class Colin:
 
 
     def Init(self, r: int, g: int, b: int):
+        self.r = r
+        self.g = g
+        self.b = b
+
+        self.hex = self.ToHex(r, g, b)
+
         self.color_data = self.SetColor(r, g, b)
 
+        self.infos[InfoType.Name] = (self.SetFgColor(r, g, b) + 'color' + self.reset + ': ')
         self.infos[InfoType.Hex] = (self.red + 'hex  : ' + self.orange + self.hex)
         self.infos[InfoType.Cmyk] = (self.orange + 'cmyk : ' + self.yellow + 'work-in-progress')
         self.infos[InfoType.Hsl] = (self.yellow + 'hsl  : ' + self.green + 'work-in-progress')
