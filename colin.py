@@ -59,6 +59,7 @@ class Colin:
 
         self.cmyk = ()
         self.hsl = ()
+        self.hsv = ()
 
         self.light_gray = self.SetColor(171, 171, 171)
         self.white = self.SetColor(255, 255, 255)
@@ -167,6 +168,45 @@ class Colin:
 
         return str(round(h, 2)), str(round(s, 2)), str(round(l, 2))
 
+    def ToHSV(self, r: float, g: float, b: float):
+        _r, _g, _b, copy_r, copy_g, copy_b = r, g, b, 0, 0, 0
+
+        h, s, v, min, max = 0.0, 0.0, 0.0, 0.0, 0.0
+
+        _r = _r / 255
+        _g = _g / 255
+        _b = _b / 255
+
+        max = self.get_max(_r, _g, _b)
+        min = self.get_min(_r, _g, _b)
+
+        v = max
+
+        if min == max:
+            h = s = 0
+
+            return str(0), str(0), str(round(v * 100, 2))
+
+        s = (max - min) / max
+
+        copy_r = (max - _r) / (max - min)
+        copy_g = (max - _g) / (max - min)
+        copy_b = (max - _b) / (max - min)
+
+        if _g - _b == 0:
+            h = 0
+        elif max == _r:
+            h = 60 * (_g - b) / (max - min)
+        elif max == _g:
+            h = 60 * (_b - _r) / (max - min) + 120
+        elif max == _b:
+            h = 60 * (_r - _g) / (max - min) + 240
+
+        if h < 0:
+            h = h + 360
+
+        return str(round(h, 2)), str(round(s * 100, 2)), str(round(v * 100, 2))
+
     def name_function(self):
         pass
 
@@ -217,7 +257,15 @@ class Colin:
               + ')')
 
     def hsv_function(self):
-        pass
+        print(end='('
+              + '\033[0;31m'
+              + self.hsv[0]
+              + self.reset
+              + ', \033[0;32m'
+              + self.hsv[1]
+              + ', \033[0;34m'
+              + self.hsv[2]
+              + ')')
 
     def hmm2_function(self):
         pass
@@ -289,12 +337,13 @@ class Colin:
 
         self.cmyk = self.ToCMYK(r, g, b)
         self.hsl = self.ToHSL(r, g, b)
+        self.hsv = self.ToHSV(r, g, b)
 
         self.infos[InfoType.Name] = (self.SetFgColor(r, g, b) + 'color' + self.reset + ': ')
         self.infos[InfoType.Hex] = (self.red + 'hex  : ' + self.orange + self.hex)
         self.infos[InfoType.Cmyk] = (self.orange + 'cmyk : ' + self.yellow)
         self.infos[InfoType.Hsl] = (self.yellow + 'hsl  : ' + self.green)
-        self.infos[InfoType.Hsv] = (self.green + 'hsv  : ' + self.blue + 'work-in-progress')
+        self.infos[InfoType.Hsv] = (self.green + 'hsv  : ' + self.blue)
         self.infos[InfoType.Ascii] = (self.blue + 'ascii: ' + self.purple + 'work-in-progress')
         self.infos[InfoType.Esc] = (self.purple + 'esc  : ' + self.pink + 'work-in-progress')
 
