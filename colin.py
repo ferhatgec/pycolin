@@ -57,6 +57,8 @@ class Colin:
         self.g = 0
         self.b = 0
 
+        self.cmyk = ()
+
         self.light_gray = self.SetColor(171, 171, 171)
         self.white = self.SetColor(255, 255, 255)
 
@@ -74,6 +76,38 @@ class Colin:
             return '#null'
 
         return '#%02x%02x%02x' % (r, g, b)
+
+    def ToCMYK(self, r: int, g: int, b: int) -> tuple:
+        _r, _g, _b = r, g, b
+
+        w, c, m, y, k, max = 0, 0, 0, 0, 0, 0
+
+        if _r == 0 and _g == 0 and _b == 0:
+            c = m = y = 0
+            k = 100
+        else:
+            _r = _r / 255
+            _g = _g / 255
+            _b = _b / 255
+
+            max = _r
+
+            # Get max value
+            if _g > max:
+                max = _g
+
+            if _b > max:
+                max = _b
+
+            w = max
+
+            c = ((w - _r) / w) * 100
+            m = ((w - _g) / w) * 100
+            y = ((w - _b) / w) * 100
+
+            k = (1 - w) * 100
+
+        return str(round(c, 2)), str(round(m, 2)), str(round(y, 2)), str(round(k, 2))
 
     def name_function(self):
         pass
@@ -100,7 +134,18 @@ class Colin:
         pass
 
     def cmyk_function(self):
-        pass
+        print(end='('
+              + '\033[0;31m'
+              + self.cmyk[0]
+              + self.reset
+              + ', \033[0;32m'
+              + self.cmyk[1]
+              + ', \033[0;34m'
+              + self.cmyk[2]
+              + ', '
+              + self.pink
+              + self.cmyk[3]
+              + ')')
 
     def hsl_function(self):
         pass
@@ -176,9 +221,11 @@ class Colin:
 
         self.color_data = self.SetColor(r, g, b)
 
+        self.cmyk = self.ToCMYK(r, g, b)
+
         self.infos[InfoType.Name] = (self.SetFgColor(r, g, b) + 'color' + self.reset + ': ')
         self.infos[InfoType.Hex] = (self.red + 'hex  : ' + self.orange + self.hex)
-        self.infos[InfoType.Cmyk] = (self.orange + 'cmyk : ' + self.yellow + 'work-in-progress')
+        self.infos[InfoType.Cmyk] = (self.orange + 'cmyk : ' + self.yellow)
         self.infos[InfoType.Hsl] = (self.yellow + 'hsl  : ' + self.green + 'work-in-progress')
         self.infos[InfoType.Hsv] = (self.green + 'hsv  : ' + self.blue + 'work-in-progress')
         self.infos[InfoType.Ascii] = (self.blue + 'ascii: ' + self.purple + 'work-in-progress')
