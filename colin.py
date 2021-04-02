@@ -271,10 +271,11 @@ class Colin:
         pass
 
     def ascii_function(self):
-        pass
+        print(end='\\033' + self.color_data[1:])
+
 
     def esc_function(self):
-        pass
+        print(end='\\033')
 
     def switch(self, arg: InfoType):
         {
@@ -344,8 +345,8 @@ class Colin:
         self.infos[InfoType.Cmyk] = (self.orange + 'cmyk : ' + self.yellow)
         self.infos[InfoType.Hsl] = (self.yellow + 'hsl  : ' + self.green)
         self.infos[InfoType.Hsv] = (self.green + 'hsv  : ' + self.blue)
-        self.infos[InfoType.Ascii] = (self.blue + 'ascii: ' + self.purple + 'work-in-progress')
-        self.infos[InfoType.Esc] = (self.purple + 'esc  : ' + self.pink + 'work-in-progress')
+        self.infos[InfoType.Ascii] = (self.blue + 'ascii: ' + self.purple)
+        self.infos[InfoType.Esc] = (self.purple + 'esc  : ' + self.pink)
 
     def PrintColorBox(self, split: bool):
         if split:
