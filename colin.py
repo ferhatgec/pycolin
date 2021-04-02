@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+
+# MIT License
+#
+# Copyright (c) 2021 Ferhat Geçdoğan All Rights Reserved.
+# Distributed under the terms of the MIT License.
+#
+#
+
+# PyColin : Python implementation of Colin
+#
+# github.com/ferhatgec/colin
+#
+#
+
 from sys import argv, exit
 
 color = '\033[48;2;'
