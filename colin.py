@@ -58,6 +58,7 @@ class Colin:
         self.b = 0
 
         self.cmyk = ()
+        self.hsl = ()
 
         self.light_gray = self.SetColor(171, 171, 171)
         self.white = self.SetColor(255, 255, 255)
@@ -109,6 +110,63 @@ class Colin:
 
         return str(round(c, 2)), str(round(m, 2)), str(round(y, 2)), str(round(k, 2))
 
+
+    def get_min(self, r: float, g: float, b: float):
+        min = r
+
+        if g < min:
+            min = g
+
+        if b < min:
+            min = b
+
+        return min
+
+    def get_max(self, r: float, g: float, b: float):
+        max = r
+
+        if g > max:
+            max = g
+
+        if b > max:
+            max = b
+
+        return max
+
+    def ToHSL(self, r: float, g: float, b: float):
+        _r, _g, _b = r, g, b
+
+        h, s, l, min, max = 0, 0, 0, 0, 0
+
+        _r = _r / 255.0
+        _g = _g / 255.0
+        _b = _b / 255.0
+
+        min = self.get_min(_r, _g, _b)
+        max = self.get_max(_r, _g, _b)
+
+        l = 50 * (min + max)
+
+        if min == max:
+            s = h = 0
+        elif l < 50:
+           s = 100 * (max - min) / (max + min)
+        else:
+           s = 100 * (max - min) / (2.0 - max - min)
+
+
+        if max == _r:
+            h = 60 * (_g - _b) / (max - min)
+        elif max == _g:
+            h = 60 * (_b - _r) / (max - min) + 120
+        elif max == _b:
+            h = 60 * (_r - _g) / (max - min) + 240
+
+        if h < 0:
+            h = h + 360
+
+        return str(round(h, 2)), str(round(s, 2)), str(round(l, 2))
+
     def name_function(self):
         pass
 
@@ -148,7 +206,15 @@ class Colin:
               + ')')
 
     def hsl_function(self):
-        pass
+        print(end='('
+              + '\033[0;31m'
+              + self.hsl[0]
+              + self.reset
+              + ', \033[0;32m'
+              + self.hsl[1]
+              + ', \033[0;34m'
+              + self.hsl[2]
+              + ')')
 
     def hsv_function(self):
         pass
@@ -222,11 +288,12 @@ class Colin:
         self.color_data = self.SetColor(r, g, b)
 
         self.cmyk = self.ToCMYK(r, g, b)
+        self.hsl = self.ToHSL(r, g, b)
 
         self.infos[InfoType.Name] = (self.SetFgColor(r, g, b) + 'color' + self.reset + ': ')
         self.infos[InfoType.Hex] = (self.red + 'hex  : ' + self.orange + self.hex)
         self.infos[InfoType.Cmyk] = (self.orange + 'cmyk : ' + self.yellow)
-        self.infos[InfoType.Hsl] = (self.yellow + 'hsl  : ' + self.green + 'work-in-progress')
+        self.infos[InfoType.Hsl] = (self.yellow + 'hsl  : ' + self.green)
         self.infos[InfoType.Hsv] = (self.green + 'hsv  : ' + self.blue + 'work-in-progress')
         self.infos[InfoType.Ascii] = (self.blue + 'ascii: ' + self.purple + 'work-in-progress')
         self.infos[InfoType.Esc] = (self.purple + 'esc  : ' + self.pink + 'work-in-progress')
