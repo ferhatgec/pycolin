@@ -135,7 +135,9 @@ class Colin:
            s = 100 * (max - min) / (2.0 - max - min)
 
 
-        if max == _r:
+        if _g - _b == 0:
+            h = 0
+        elif max == _r:
             h = 60 * (_g - _b) / (max - min)
         elif max == _g:
             h = 60 * (_b - _r) / (max - min) + 120
